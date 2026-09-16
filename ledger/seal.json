@@ -1,0 +1,10 @@
+{
+  "tip_hash": "f187599d0ddb3b9fdd7da257757aefd66351d34a823154196b1df9a20e0d91e1",
+  "count": 8,
+  "sealed_at": "2026-09-16T13:21:42Z",
+  "issuer": "Cumulative Web Inc",
+  "signature": {
+    "alg": "Ed25519",
+    "sig": "Enj+hr2C2bfBk/Dk1CygPyQr5skinqP3eI63iV8HHCoJdgK5covc8e8IVc6J1VvauQMW4uJXJ0lpHNPXCHMKBQ=="
+  }
+}
