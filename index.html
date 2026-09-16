@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Change Ledger — governed pipeline for agent behavior changes</title>
+<meta name="description" content="Propose, risk-scan, review and decide agent behavior changes on an append-only, hash-chained ledger.">
+<style>
+:root{--bg:#0b0b0e;--card:#141419;--gold:#e8b13c;--txt:#ececf1;--mut:#9a9aad;--line:#26262e;--red:#ff6b6b;--org:#ffa94d;--yel:#ffd43b;--grn:#6fe08f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;padding:18px 14px 80px;max-width:860px;margin-left:auto;margin-right:auto}
+header.top{display:flex;align-items:center;gap:12px;margin:6px 0 14px}
+.badge{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f5d67b,#b07f1f);display:flex;align-items:center;justify-content:center;font-weight:800;color:#111;font-size:21px;flex:none}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:22px 0 10px;color:var(--gold)}h3{font-size:15px;margin:16px 0 8px}
+.sub{color:var(--mut);font-size:13px;margin:2px 0 0}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+nav.tabs button{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+nav.tabs button.on{background:var(--gold);color:#111;border-color:var(--gold);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 4px}
+input,select,textarea{width:100%;background:#0e0e12;border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:10px;font-size:14px;font-family:inherit}
+textarea{min-height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+button.cta{background:var(--gold);color:#111;border:0;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 16px;font-size:14px;cursor:pointer;margin:6px 6px 0 0}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.dim{color:var(--mut);font-size:13px}
+.diff{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#0e0e12;border:1px solid var(--line);border-radius:10px;padding:10px;overflow:auto;max-height:280px;white-space:pre-wrap}
+.diff .add{color:var(--grn)}.diff .del{color:var(--red)}.diff .ctx{color:var(--mut)}
+.flag{border-left:3px solid var(--yel);padding:8px 12px;margin:8px 0;background:#0e0e12;border-radius:0 10px 10px 0}
+.flag.critical{border-color:var(--red)}.flag.high{border-color:var(--org)}.flag.medium{border-color:var(--yel)}
+.flag .sev{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.flag.critical .sev{color:var(--red)}.flag.high .sev{color:var(--org)}.flag.medium .sev{color:var(--yel)}
+.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;border-radius:999px;padding:2px 10px;margin-left:8px;text-transform:uppercase}
+.pill.proposed{background:#1a2b4a;color:#8fb8ff}.pill.approved{background:#123b22;color:var(--grn)}
+.pill.rejected{background:#3b1212;color:var(--red)}.pill.needs_changes{background:#3b2f12;color:var(--yel)}
+.entry{cursor:pointer}.entry:hover{border-color:var(--gold)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1;min-width:140px}
+a{color:var(--gold);text-decoration:none}
+footer{margin-top:36px;color:var(--mut);font-size:12px;text-align:center}
+.limits{border:1px dashed var(--line);border-radius:14px;padding:14px 16px;margin:22px 0;font-size:13px;color:var(--mut)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header class="top"><div class="badge">◈</div><div>
+<h1 data-i18n="app.title">Change Ledger</h1>
+<p class="sub" data-i18n="app.tagline">Governed pipeline for agent behavior changes · append-only · hash-chained · change/1.0</p>
+</div></header>
+
+<nav class="tabs">
+<button data-view="propose" class="on" data-i18n="nav.propose">Propose</button>
+<button data-view="ledger" data-i18n="nav.ledger">Ledger</button>
+<button data-view="review" data-i18n="nav.review">Review</button>
+<button data-view="export" data-i18n="nav.export">Export</button>
+</nav>
+
+<!-- PROPOSE -->
+<section id="v-propose">
+<div class="card">
+<h2 data-i18n="propose.title">Propose a behavior change</h2>
+<label data-i18n="propose.proposer">Proposer (name / handle)</label>
+<input id="f-proposer" data-i18n-ph="propose.proposer_ph" placeholder="e.g. kingcode">
+<div class="row">
+<div><label data-i18n="propose.type">Change type</label>
+<select id="f-type">
+<option value="prompt_edit" data-i18n="type.prompt_edit">Prompt edit</option>
+<option value="skill_update" data-i18n="type.skill_update">Skill update</option>
+<option value="config_change" data-i18n="type.config_change">Config change</option>
+<option value="policy_change" data-i18n="type.policy_change">Policy change</option>
+</select></div>
+<div><label data-i18n="propose.target">Target (agent / skill / file)</label>
+<input id="f-target" data-i18n-ph="propose.target_ph" placeholder="e.g. CWI_Sync system prompt"></div>
+</div>
+<label data-i18n="propose.before">Before (current text — leave empty for new)</label>
+<textarea id="f-before"></textarea>
+<label data-i18n="propose.after">After (proposed text)</label>
+<textarea id="f-after"></textarea>
+<label data-i18n="propose.rationale">Rationale</label>
+<textarea id="f-rationale" style="min-height:60px" data-i18n-ph="propose.rationale_ph" placeholder="Why is this change needed?"></textarea>
+<h3 data-i18n="propose.diff_title">Diff preview</h3>
+<div class="diff" id="diff-prev"><span class="ctx">—</span></div>
+<h3 data-i18n="propose.risk_title">Risk flags (advisory heuristics)</h3>
+<div id="risk-prev"><p class="dim" data-i18n="propose.risk_hint">Flags appear as you type the proposed text.</p></div>
+<button class="cta" id="btn-propose" data-i18n="propose.submit">Record proposal</button>
+<p class="dim" data-i18n="working.note">Proposals land in your local working copy below. Publishing to the canonical log happens via repo PR + Ed25519 seal.</p>
+</div>
+</section>
+
+<!-- LEDGER -->
+<section id="v-ledger" class="hidden">
+<div class="card">
+<h2 data-i18n="ledger.title">Ledger</h2>
+<p class="dim" id="chain-line">…</p>
+<div class="row">
+<div><label data-i18n="ledger.filter_status">Status</label>
+<select id="flt-status"><option value="" data-i18n="ledger.all">All</option><option value="proposed" data-i18n="status.proposed">Proposed</option><option value="approved" data-i18n="status.approved">Approved</option><option value="rejected" data-i18n="status.rejected">Rejected</option><option value="needs_changes" data-i18n="status.needs_changes">Needs changes</option></select></div>
+<div><label data-i18n="ledger.filter_type">Type</label>
+<select id="flt-type"><option value="" data-i18n="ledger.all">All</option><option value="prompt_edit" data-i18n="type.prompt_edit">Prompt edit</option><option value="skill_update" data-i18n="type.skill_update">Skill update</option><option value="config_change" data-i18n="type.config_change">Config change</option><option value="policy_change" data-i18n="type.policy_change">Policy change</option></select></div>
+</div>
+<div id="ledger-list"></div>
+</div>
+<div class="card hidden" id="detail-card"></div>
+</section>
+
+<!-- REVIEW -->
+<section id="v-review" class="hidden">
+<div class="card">
+<h2 data-i18n="review.title">Review a proposal</h2>
+<label data-i18n="review.select">Change</label><select id="r-change"></select>
+<label data-i18n="review.decider">Decider (name / handle)</label>
+<input id="r-decider" placeholder="e.g. black">
+<label data-i18n="review.rationale">Rationale</label>
+<textarea id="r-rationale" style="min-height:70px"></textarea>
+<div>
+<button class="ghost" id="btn-approve" data-i18n="review.approve">Approve</button>
+<button class="ghost" id="btn-needs" data-i18n="review.needs_changes">Needs changes</button>
+<button class="ghost" id="btn-reject" data-i18n="review.reject">Reject</button>
+</div>
+<p class="dim" id="review-msg"></p>
+</div>
+</section>
+
+<!-- EXPORT -->
+<section id="v-export" class="hidden">
+<div class="card">
+<h2 data-i18n="export.title">Export decision record</h2>
+<p class="dim" data-i18n="export.desc">Download a signed-bundle-ready JSON record for any change: proposal, full decision trail, and chain verification. Send it to the ledger maintainer to publish via PR + Ed25519 seal.</p>
+<label data-i18n="review.select">Change</label><select id="e-change"></select>
+<div><button class="cta" id="btn-export" data-i18n="export.download">Download record</button>
+<button class="ghost" id="btn-copy" data-i18n="export.copy">Copy JSON</button></div>
+</div>
+</section>
+
+<div class="limits">
+<b data-i18n="limits.title">Honest limits</b>
+<p style="margin:6px 0" data-i18n="limits.body">Advisory review trail, not a sandbox. Risk flags are regex heuristics over added lines — they catch known-bad patterns, not novel ones, and can false-positive on innocent words. The browser working copy is yours alone until a maintainer seals it into the canonical log. Verify any published ledger with verify.js — never on trust.</p>
+</div>
+
+<footer>CWI Change Ledger · <a href="ledger/ledger.json">ledger.json</a> · <a href="ledger/index.json">index</a> · <a href="schema/ledger.schema.json">schema cwi.change-record/1.0</a> · <a href="verify.js">verify.js</a> · <a href="LEDGER-PROTOCOL.md">protocol</a></footer>
+
+<script src="ledger.js"></script>
+<script src="https://cumulativewebinc.github.io/cwi-i18n/i18n.js" data-app="change-ledger"></script>
+<script>
+(function(){
+"use strict";
+var L = window.CWIChangeLedger;
+var canon = [], working = []; // canon: published chain; working: local unpublished
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function t(k, fb){ try { if (window.CWI18n && CWI18n.t) { var v = CWI18n.t(k); if (v && v !== k) return v; } } catch(e){} return fb; }
+
+function all(){ return canon.concat(working); }
+function pill(s){ return '<span class="pill '+s+'">'+esc(t('status.'+s, s.replace('_',' ')))+'</span>'; }
+
+function renderDiff(ops){
+  return ops.map(function(o){
+    var cls = o.t === '+' ? 'add' : o.t === '-' ? 'del' : 'ctx';
+    return '<span class="'+cls+'">'+esc(o.t+' '+o.s)+'</span>';
+  }).join('\n');
+}
+function renderFlags(flags){
+  if (!flags.length) return '<p class="dim">'+esc(t('propose.no_risks','No risk flags — the added lines match no known-bad patterns.'))+'</p>';
+  return flags.map(function(f){
+    return '<div class="flag '+f.severity+'"><span class="sev">'+esc(f.severity)+' · '+esc(f.rule)+'</span><br><b>'+esc(f.title)+'</b><br><span class="mono">'+esc(f.evidence)+'</span><br><span class="dim">'+esc(f.category)+'</span></div>';
+  }).join('');
+}
+function liveScan(){
+  var d = L.diffLines($('f-before').value, $('f-after').value);
+  $('diff-prev').innerHTML = renderDiff(d.ops);
+  $('risk-prev').innerHTML = renderFlags(L.scanRisks($('f-before').value, $('f-after').value).flags);
+}
+['f-before','f-after'].forEach(function(id){ $(id).addEventListener('input', liveScan); });
+
+function statusOf(id){ return L.changeStatus(all(), id).status; }
+
+function renderLedger(){
+  var fs = $('flt-status').value, ft = $('flt-type').value;
+  var props = all().filter(function(e){ return e.entry_type === 'proposal'; })
+    .filter(function(p){ return (!fs || statusOf(p.change_id) === fs) && (!ft || p.change_type === ft); });
+  var v = L.verifyChain(all());
+  $('chain-line').textContent = all().length + ' entries · tip ' + (v.tip||'—').slice(0,12) + '… · chain ' + (v.ok ? 'OK' : 'BROKEN');
+  if (!props.length) { $('ledger-list').innerHTML = '<p class="dim">'+esc(t('ledger.empty','No changes match.'))+'</p>'; return; }
+  $('ledger-list').innerHTML = props.slice().reverse().map(function(p){
+    var s = statusOf(p.change_id);
+    return '<div class="card entry" data-id="'+p.change_id+'"><b>'+esc(p.target)+'</b>'+pill(s)+
+      '<p class="dim" style="margin:6px 0">'+esc(p.change_type)+' · '+esc(p.proposer)+' · '+esc(p.proposed_at.slice(0,10))+
+      ' · risk: <b>'+esc(p.risk_level)+'</b> · <span class="mono">'+esc(p.change_id)+'</span></p></div>';
+  }).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('.entry'), function(el){
+    el.addEventListener('click', function(){ showDetail(el.getAttribute('data-id')); });
+  });
+}
+function showDetail(id){
+  var trail = L.changeTrail(all(), id);
+  var p = trail.filter(function(e){ return e.entry_type === 'proposal'; })[0];
+  var decs = trail.filter(function(e){ return e.entry_type === 'decision'; });
+  var d = L.diffLines(p.before, p.after);
+  $('detail-card').classList.remove('hidden');
+  $('detail-card').innerHTML =
+    '<div class="row"><h2 style="margin:0">'+esc(p.target)+'</h2>'+pill(statusOf(id))+'</div>'+
+    '<p class="dim"><span class="mono">'+esc(id)+'</span> · '+esc(p.change_type)+' · '+esc(p.proposer)+' · '+esc(p.proposed_at)+'</p>'+
+    (p.rationale ? '<p><b>Rationale:</b> '+esc(p.rationale)+'</p>' : '')+
+    '<h3>'+esc(t('detail.diff','Diff'))+' <span class="dim">+'+d.added+' / -'+d.removed+'</span></h3><div class="diff">'+renderDiff(d.ops)+'</div>'+
+    '<h3>'+esc(t('detail.risks','Risk flags'))+'</h3>'+renderFlags(p.risk_flags)+
+    '<h3>'+esc(t('detail.decisions','Decision trail'))+'</h3>'+
+    (decs.length ? decs.map(function(x){
+      return '<div class="card" style="margin:8px 0"><b>'+esc(x.decider)+'</b> → '+pill(x.decision)+
+        '<p class="dim" style="margin:4px 0">'+esc(x.decided_at)+'</p><p style="margin:4px 0">'+esc(x.rationale)+'</p></div>';
+    }).join('') : '<p class="dim">—</p>')+
+    '<h3>'+esc(t('detail.hashes','Chain'))+'</h3><p class="mono dim">entry_hash '+esc(p.entry_hash)+'<br>prev_hash '+esc(p.prev_hash)+'</p>'+
+    '<button class="ghost" id="d-back">'+esc(t('detail.back','Back'))+'</button> '+
+    '<button class="ghost" id="d-link">?change= link</button>';
+  $('d-back').addEventListener('click', function(){ $('detail-card').classList.add('hidden'); });
+  $('d-link').addEventListener('click', function(){
+    var u = location.origin + location.pathname + '?change=' + id;
+    if (navigator.clipboard) navigator.clipboard.writeText(u);
+    $('d-link').textContent = u;
+  });
+  $('detail-card').scrollIntoView();
+}
+['flt-status','flt-type'].forEach(function(id){ $(id).addEventListener('change', renderLedger); });
+
+$('btn-propose').addEventListener('click', function(){
+  try {
+    var p = L.buildProposal({ proposer: $('f-proposer').value, change_type: $('f-type').value,
+      target: $('f-target').value, before: $('f-before').value, after: $('f-after').value,
+      rationale: $('f-rationale').value });
+    working = L.appendEntry(canon.concat(working), p).slice(canon.length);
+    // NOTE: appendEntry over canon+working then slice keeps hashes chained across the boundary.
+    persist(); renderLedger(); refreshSelects();
+    showDetail(p.change_id); switchView('ledger');
+  } catch(e){ alert(e.message); }
+});
+function decide(decision){
+  var id = $('r-change').value;
+  try {
+    var x = L.buildDecision(id, { decider: $('r-decider').value, decision: decision, rationale: $('r-rationale').value });
+    working = L.appendEntry(canon.concat(working), x).slice(canon.length);
+    persist(); renderLedger(); refreshSelects();
+    $('review-msg').textContent = 'Recorded: ' + decision + ' → ' + id;
+  } catch(e){ $('review-msg').textContent = e.message; }
+}
+$('btn-approve').addEventListener('click', function(){ decide('approved'); });
+$('btn-reject').addEventListener('click', function(){ decide('rejected'); });
+$('btn-needs').addEventListener('click', function(){ decide('needs_changes'); });
+
+function refreshSelects(){
+  var props = all().filter(function(e){ return e.entry_type === 'proposal'; });
+  var opts = props.map(function(p){ return '<option value="'+p.change_id+'">'+esc(p.target)+' ('+esc(statusOf(p.change_id))+')</option>'; }).join('');
+  $('r-change').innerHTML = opts; $('e-change').innerHTML = opts;
+}
+$('btn-export').addEventListener('click', function(){
+  var rec = L.exportRecord(all(), $('e-change').value);
+  var blob = new Blob([JSON.stringify(rec, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = $('e-change').value + '.change-record.json'; a.click();
+});
+$('btn-copy').addEventListener('click', function(){
+  var s = JSON.stringify(L.exportRecord(all(), $('e-change').value), null, 2);
+  if (navigator.clipboard) navigator.clipboard.writeText(s).then(function(){ $('btn-copy').textContent = '✓'; });
+});
+
+function persist(){ try { localStorage.setItem('cwi-change-ledger-working', JSON.stringify(working)); } catch(e){} }
+function restore(){ try { var w = JSON.parse(localStorage.getItem('cwi-change-ledger-working') || '[]'); if (Array.isArray(w)) working = w; } catch(e){} }
+
+function switchView(name){
+  ['propose','ledger','review','export'].forEach(function(v){
+    $('v-'+v).classList.toggle('hidden', v !== name);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('nav.tabs button'), function(b){
+    b.classList.toggle('on', b.getAttribute('data-view') === name);
+  });
+}
+Array.prototype.forEach.call(document.querySelectorAll('nav.tabs button'), function(b){
+  b.addEventListener('click', function(){ switchView(b.getAttribute('data-view')); });
+});
+
+// deep link ?change=<id>
+function deepLink(){
+  var m = /[?&]change=([^&]+)/.exec(location.search);
+  if (m && all().some(function(e){ return e.change_id === m[1]; })) { switchView('ledger'); showDetail(m[1]); }
+}
+
+fetch('ledger/ledger.json').then(function(r){ return r.json(); }).then(function(j){
+  canon = j.entries || [];
+  restore(); renderLedger(); refreshSelects(); liveScan(); deepLink();
+}).catch(function(){ restore(); renderLedger(); refreshSelects(); liveScan(); });
+})();
+</script>
+</body>
+</html>
