@@ -1,0 +1,160 @@
+{
+  "schema": "cwi.change-record/1.0",
+  "protocol": "change/1.0",
+  "issuer": "Cumulative Web Inc",
+  "genesis_prev_hash": "GENESIS",
+  "tip_hash": "f187599d0ddb3b9fdd7da257757aefd66351d34a823154196b1df9a20e0d91e1",
+  "count": 8,
+  "exported_at": "2026-09-16T13:21:17Z",
+  "entries": [
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6M8ATZ9R24K78E3M6B",
+      "entry_type": "proposal",
+      "proposer": "kingcode",
+      "proposed_at": "2026-09-16T13:21:17Z",
+      "change_type": "config_change",
+      "target": "CumulativeWebInc/cwi-sync-audition — licensing clearance line (app.js)",
+      "rationale": "Black reported red UNVERIFIED labels. The badge described clearance paperwork status, not music validity; it read as the music being fake. Replace with neutral, truthful wording.",
+      "before": "Sync licensing line rendered with a red truth-tier badge: \"UNVERIFIED\" (no pre-signed clearance paperwork on file).",
+      "after": "Sync licensing: one-stop via hp@cumulativeweb.com · terms confirmed on request — neutral \"clearance on request\" chip. Machine data keeps pre_cleared:false with the full clearance note.",
+      "diff_summary": {
+        "added_lines": 1,
+        "removed_lines": 1
+      },
+      "risk_flags": [],
+      "risk_level": "none",
+      "prev_hash": "GENESIS",
+      "entry_hash": "aea5092d2770d9a44b0fca2092d515570e27859aa7fe4cd56cb493a3e2df8e6f"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6M8ATZ9R24K78E3M6B",
+      "entry_type": "decision",
+      "decision_id": "dec_01M2N61Y6RPVFWFREF3YQ8A44S",
+      "decider": "black",
+      "decided_at": "2026-09-16T13:21:17Z",
+      "decision": "approved",
+      "rationale": "\"Ok looks good.\" — confirmed on iOS after cache cleared.",
+      "supersedes": null,
+      "prev_hash": "aea5092d2770d9a44b0fca2092d515570e27859aa7fe4cd56cb493a3e2df8e6f",
+      "entry_hash": "8d67bcb7c2a7103898e39a23b3bf8818adc4441a4b9c8092dd02abd4c050b6ee"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6VW3HM9D7RQREVMQWW",
+      "entry_type": "proposal",
+      "proposer": "kingcode",
+      "proposed_at": "2026-09-16T13:21:17Z",
+      "change_type": "config_change",
+      "target": "CumulativeWebInc/cwi-sync-audition — UI strings",
+      "rationale": "Standing order: every CWI app ships with translation built in. English-only UI excludes agents and users operating in other languages.",
+      "before": "UI strings hard-coded in English only.",
+      "after": "UI strings extracted to data-i18n keys; loader <script src=\"https://cumulativewebinc.github.io/cwi-i18n/i18n.js\" data-app=\"sync-audition\">; 27 keys x 6 languages (en, es, pt-BR, fr, de, ja). Clearance/tier legal terms kept English + gloss per translation policy.",
+      "diff_summary": {
+        "added_lines": 1,
+        "removed_lines": 1
+      },
+      "risk_flags": [
+        {
+          "rule": "CHG-PR-001",
+          "category": "privilege",
+          "severity": "high",
+          "title": "New network access added",
+          "evidence": "UI strings extracted to data-i18n keys; loader <script src=\"https://cumulativewebinc.github.io/cwi-i18n/i18n.js\" data-app=\"sync-audition\">; 27 keys x 6 languages (en, es, pt-BR, fr, de, ja). Clearance",
+          "added_line": 1
+        }
+      ],
+      "risk_level": "high",
+      "prev_hash": "8d67bcb7c2a7103898e39a23b3bf8818adc4441a4b9c8092dd02abd4c050b6ee",
+      "entry_hash": "ec5c784f6c2cf69ec1048056e2d9cf7c9b2abd92312f9788332ec6866e4b7647"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6VW3HM9D7RQREVMQWW",
+      "entry_type": "decision",
+      "decision_id": "dec_01M2N61Y6WTSR95FTA8HNS00VH",
+      "decider": "kingcode",
+      "decided_at": "2026-09-16T13:21:17Z",
+      "decision": "approved",
+      "rationale": "Key-coverage green, DOM-stub render smoke green, merged to main and served 200.",
+      "supersedes": null,
+      "prev_hash": "ec5c784f6c2cf69ec1048056e2d9cf7c9b2abd92312f9788332ec6866e4b7647",
+      "entry_hash": "7f80865d1d8c2acc251b891350b4805e1e94650ed76dbc027f5b369a11a1786a"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6XPP9S6GVW0KTVJ8E0",
+      "entry_type": "proposal",
+      "proposer": "kingcode",
+      "proposed_at": "2026-09-16T13:21:17Z",
+      "change_type": "policy_change",
+      "target": "CumulativeWebInc/cwi-verdict-watch — invalidation policy",
+      "rationale": "Backlog spec called for auto-downgrade on drift. Our own 32 false-positive dead-link incident proved false invalidation is worse than stale verification. v1 flags drift for human review and never auto-downgrades; every finding carries downgrade_action \"none — v1 flags drift for human review\".",
+      "before": "Spec: on evidence drift, automatically downgrade the claim tier.",
+      "after": "Policy: on evidence drift, flag for human review. No automatic tier changes. Documented in UI, README, and finding schema.",
+      "diff_summary": {
+        "added_lines": 1,
+        "removed_lines": 1
+      },
+      "risk_flags": [],
+      "risk_level": "none",
+      "prev_hash": "7f80865d1d8c2acc251b891350b4805e1e94650ed76dbc027f5b369a11a1786a",
+      "entry_hash": "c0016e8293c9ba3585a1bd5f956c4b7ef6ab48798062285f9d0ca256f7684bd4"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y6XPP9S6GVW0KTVJ8E0",
+      "entry_type": "decision",
+      "decision_id": "dec_01M2N61Y6Y9D85EG3JNJNDJN36",
+      "decider": "kingcode",
+      "decided_at": "2026-09-16T13:21:17Z",
+      "decision": "approved",
+      "rationale": "Deliberate, documented deviation from the backlog spec; reasoning recorded in the decision trail.",
+      "supersedes": null,
+      "prev_hash": "c0016e8293c9ba3585a1bd5f956c4b7ef6ab48798062285f9d0ca256f7684bd4",
+      "entry_hash": "60045923a48638dfb81743305970ac9330b5102be5c5fe8749bc32fa47943c3d"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y71M2KPYGWEFS8GQ5WB",
+      "entry_type": "proposal",
+      "proposer": "kingcode",
+      "proposed_at": "2026-09-16T13:21:17Z",
+      "change_type": "config_change",
+      "target": "CumulativeWebInc/cwi-sync-audition + cwi-brief-matcher — VERIFIED badges",
+      "rationale": "A VERIFIED badge nobody can check is a claim, not proof. Wire every VERIFIED placement badge to its signed trust-log proof page so trust becomes auditable.",
+      "before": "VERIFIED placement badges rendered as static labels with no link to evidence.",
+      "after": "VERIFIED badges link (new tab) to their trust-log claim proof pages. Badges render unlinked when no live proof exists — dead proof links are never shipped.",
+      "diff_summary": {
+        "added_lines": 1,
+        "removed_lines": 1
+      },
+      "risk_flags": [],
+      "risk_level": "none",
+      "prev_hash": "60045923a48638dfb81743305970ac9330b5102be5c5fe8749bc32fa47943c3d",
+      "entry_hash": "120e7b8ab40c8b56c727238c34a9773a46fceee9205bd0e341a150b9bb1f9c6b"
+    },
+    {
+      "schema": "cwi.change-record/1.0",
+      "protocol": "change/1.0",
+      "change_id": "chg_01M2N61Y71M2KPYGWEFS8GQ5WB",
+      "entry_type": "decision",
+      "decision_id": "dec_01M2N61Y714458X2138T2HJT0K",
+      "decider": "kingcode",
+      "decided_at": "2026-09-16T13:21:17Z",
+      "decision": "approved",
+      "rationale": "Tests 25/25 + 26/26 green; served pages byte-identical to tested builds; claim pages verified 200.",
+      "supersedes": null,
+      "prev_hash": "120e7b8ab40c8b56c727238c34a9773a46fceee9205bd0e341a150b9bb1f9c6b",
+      "entry_hash": "f187599d0ddb3b9fdd7da257757aefd66351d34a823154196b1df9a20e0d91e1"
+    }
+  ]
+}
