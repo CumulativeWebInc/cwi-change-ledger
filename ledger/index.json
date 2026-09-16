@@ -1,0 +1,40 @@
+{
+  "schema": "cwi.change-record/1.0",
+  "protocol": "change/1.0",
+  "tip_hash": "f187599d0ddb3b9fdd7da257757aefd66351d34a823154196b1df9a20e0d91e1",
+  "count": 8,
+  "changes": [
+    {
+      "change_id": "chg_01M2N61Y6M8ATZ9R24K78E3M6B",
+      "target": "CumulativeWebInc/cwi-sync-audition — licensing clearance line (app.js)",
+      "change_type": "config_change",
+      "status": "approved",
+      "risk_level": "none",
+      "proposed_at": "2026-09-16T13:21:17Z"
+    },
+    {
+      "change_id": "chg_01M2N61Y6VW3HM9D7RQREVMQWW",
+      "target": "CumulativeWebInc/cwi-sync-audition — UI strings",
+      "change_type": "config_change",
+      "status": "approved",
+      "risk_level": "high",
+      "proposed_at": "2026-09-16T13:21:17Z"
+    },
+    {
+      "change_id": "chg_01M2N61Y6XPP9S6GVW0KTVJ8E0",
+      "target": "CumulativeWebInc/cwi-verdict-watch — invalidation policy",
+      "change_type": "policy_change",
+      "status": "approved",
+      "risk_level": "none",
+      "proposed_at": "2026-09-16T13:21:17Z"
+    },
+    {
+      "change_id": "chg_01M2N61Y71M2KPYGWEFS8GQ5WB",
+      "target": "CumulativeWebInc/cwi-sync-audition + cwi-brief-matcher — VERIFIED badges",
+      "change_type": "config_change",
+      "status": "approved",
+      "risk_level": "none",
+      "proposed_at": "2026-09-16T13:21:17Z"
+    }
+  ]
+}
