@@ -49,8 +49,9 @@ async function main() {
   if (doc.tip_hash) check('tip', doc.tip_hash === prev, `tip_hash ${String(doc.tip_hash).slice(0, 12)}… ${doc.tip_hash === prev ? 'matches' : 'MISMATCH'}`);
 
   // 3. publish seal (Ed25519 over canonical {tip_hash,count,sealed_at,issuer})
-  const sealSrc = (args[args.indexOf('--seal') + 1]) || (defaultBase(src) ? defaultBase(src) + '/ledger/seal.json' : './ledger/seal.json');
-  const pubSrc = (args[args.indexOf('--pubkey') + 1]) || (defaultBase(src) ? defaultBase(src) + '/keys/ed25519.pub' : './keys/ed25519.pub');
+  const flag = name => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : null; };
+  const sealSrc = flag('--seal') || (defaultBase(src) ? defaultBase(src) + '/ledger/seal.json' : './ledger/seal.json');
+  const pubSrc = flag('--pubkey') || (defaultBase(src) ? defaultBase(src) + '/keys/ed25519.pub' : './keys/ed25519.pub');
   try {
     const seal = JSON.parse(await loadInput(sealSrc));
     const pubPem = (await loadInput(pubSrc)).trim();
