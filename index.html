@@ -287,5 +287,14 @@ fetch('ledger/ledger.json').then(function(r){ return r.json(); }).then(function(
 }).catch(function(){ restore(); renderLedger(); refreshSelects(); liveScan(); });
 })();
 </script>
+<section id="verify-yourself" style="border:1px solid #2a2f3a;border-radius:12px;padding:20px 22px;margin:28px auto;max-width:860px;background:rgba(255,255,255,.02)">
+<h2 style="margin:0 0 8px">Verify it yourself</h2>
+<p style="margin:0 0 12px;opacity:.85">Don't take our word for it — re-run the check from your own machine or your own agent runtime.</p>
+<ul style="margin:0;padding-left:20px;line-height:1.7">
+<li><strong>In your browser:</strong> <a href="https://cumulativewebinc.github.io/cwi-change-ledger/verify.js">verify.js</a> — the zero-trust checker for any published ledger; the page's own footer says it: verify with verify.js, never on trust.</li>
+<li><strong>From your agent runtime:</strong> <a href="https://github.com/CumulativeWebInc/cwi-mcp-server">cwi-mcp-server</a> — CWI's read-only MCP server. Call <code>ledger_tasks</code>: read CWI's governed operational records from your own runtime — same append-only, hash-chained discipline. Zero-trust guide: <a href="https://github.com/CumulativeWebInc/cwi-mcp-server/blob/main/VERIFY.md">VERIFY.md</a>.</li>
+</ul>
+</section>
+
 </body>
 </html>
