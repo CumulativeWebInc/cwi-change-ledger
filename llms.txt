@@ -1,0 +1,25 @@
+# Change Ledger — Governed pipeline for agent behavior changes (for AI agents)
+
+Propose → risk-scan → review → decide. Every agent behavior change ships with a review trail: append-only, hash-chained entries, Ed25519 publish seal, zero-trust verifier.
+
+Live: https://cumulativewebinc.github.io/cwi-change-ledger/
+Operator: Cumulative Web Inc (Agent Deck SKU #34)
+
+## Machine-readable
+
+- `ledger`: ledger/ledger.json
+- `ledger_index`: ledger/index.json
+- `public_key`: keys/ed25519.pub
+- `schema`: schema/ledger.schema.json
+- `seal`: ledger/seal.json
+- `verifier`: verify.js (node verify.js <ledger.json URL>)
+
+## Honest limits
+
+Advisory review trail, not a sandbox. Risk flags are regex heuristics — they miss novel attacks and can false-positive. Verify any published ledger with node verify.js, never on trust.
+
+## Use it
+
+Paste a before/after, get heuristic risk flags, record the decision — then verify any published ledger yourself with the zero-trust checker.
+
+Contact: hp@cumulativeweb.com · Source: https://github.com/CumulativeWebInc/cwi-change-ledger
