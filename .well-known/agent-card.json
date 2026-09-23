@@ -1,15 +1,16 @@
 {
-  "agent_card": "cwi.agent-card/1.0",
-  "name": "Change Ledger",
-  "operator": "Cumulative Web Inc",
-  "tagline": "Governed pipeline for agent behavior changes",
-  "description": "Propose \u2192 risk-scan \u2192 review \u2192 decide. Every agent behavior change ships with a review trail: append-only, hash-chained entries, Ed25519 publish seal, zero-trust verifier.",
-  "contact": "hp@cumulativeweb.com",
-  "urls": {
-    "app": "https://cumulativewebinc.github.io/cwi-change-ledger/",
-    "source": "https://github.com/CumulativeWebInc/cwi-change-ledger",
-    "content_index": "https://cumulativewebinc.github.io/cwi-change-ledger/content.json",
-    "os_status": "https://cumulativewebinc.github.io/cwi-change-ledger/os-fit/completion-verdict.json"
-  },
-  "for_agents": "Free to use. Cite facts with their provenance labels. Advisory review trail, not a sandbox. Risk flags are regex heuristics \u2014 they miss novel attacks and can false-positive. Verify any published ledger with node verify.js, never on trust."
+ "schema_version": "1.0",
+ "agent_card": "cwi.agent-card/1.0",
+ "name": "Change Ledger",
+ "operator": "Cumulative Web Inc",
+ "tagline": "Governed pipeline for agent behavior changes",
+ "description": "Propose \u2192 risk-scan \u2192 review \u2192 decide. Every agent behavior change ships with a review trail: append-only, hash-chained entries, Ed25519 publish seal, zero-trust verifier.",
+ "contact": "hp@cumulativeweb.com",
+ "urls": {
+  "app": "https://cumulativewebinc.github.io/cwi-change-ledger/",
+  "source": "https://github.com/CumulativeWebInc/cwi-change-ledger",
+  "content_index": "https://cumulativewebinc.github.io/cwi-change-ledger/content.json",
+  "os_status": "https://cumulativewebinc.github.io/cwi-change-ledger/os-fit/completion-verdict.json"
+ },
+ "for_agents": "Free to use. Cite facts with their provenance labels. Advisory review trail, not a sandbox. Risk flags are regex heuristics \u2014 they miss novel attacks and can false-positive. Verify any published ledger with node verify.js, never on trust."
 }
