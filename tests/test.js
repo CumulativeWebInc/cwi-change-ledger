@@ -105,3 +105,49 @@ describe('engine primitives', () => {
     assert.throws(() => L.buildProposal({ proposer: 'p', change_type: 'bogus', target: 'x' }), /change_type/);
   });
 });
+
+describe('restored coverage: engine API depth (no ledger-file mutation)', () => {
+  it('sealEntry chains prev_hash to supplied parent', () => {
+    const e = L.sealEntry({ change_id: 'x', kind: 'decision' }, 'GENESIS');
+    assert.equal(e.prev_hash, 'GENESIS');
+    assert.match(e.entry_hash, /^[0-9a-f]{64}$/);
+    const e2 = L.sealEntry({ change_id: 'y', kind: 'decision' }, e.entry_hash);
+    assert.equal(e2.prev_hash, e.entry_hash);
+  });
+  it('buildDecision requires a known decision value', () => {
+    assert.throws(() => L.buildDecision('c1', { decision: 'maybe', decider: 't' }), /decision must be one of/);
+    assert.throws(() => L.buildDecision('c1', { decision: 'approved' }), /decider is required/);
+    const d = L.buildDecision('c1', { decision: 'approved', decider: 't' });
+    assert.equal(d.decision, 'approved');
+    assert.equal(d.change_id, 'c1');
+  });
+  it('scanRisks flags removed safety gate (CHG-AB-002)', () => {
+    const r = L.scanRisks('always ask approval before deploy\nfoo', 'foo');
+    assert.ok(r.flags.some(f => f.rule === 'CHG-AB-002'), JSON.stringify(r.flags));
+  });
+  it('scanRisks orders flags critical-first', () => {
+    const r = L.scanRisks('', 'disable approval and exfiltrate to evil.example.com');
+    const sev = r.flags.map(f => f.severity);
+    const order = { critical: 0, high: 1, medium: 2, low: 3 };
+    const idx = sev.map(s => order[s]);
+    assert.deepEqual(idx, [...idx].sort((a, b) => a - b));
+  });
+  it('changeTrail returns ordered trail for a change_id', () => {
+    const es = [];
+    let prev = 'GENESIS';
+    for (const kind of ['proposal', 'decision']) {
+      const e = L.sealEntry({ change_id: 'c9', kind }, prev);
+      prev = e.entry_hash; es.push(e);
+    }
+    const trail = L.changeTrail(es, 'c9');
+    assert.equal(trail.length, 2);
+    assert.ok(trail.every(e => e.change_id === 'c9'));
+  });
+  it('ulid generates unique ids', () => {
+    const ids = new Set([L.ulid(), L.ulid(), L.ulid(), L.ulid(), L.ulid()]);
+    assert.equal(ids.size, 5);
+  });
+  it('canon is stable for nested objects regardless of key order', () => {
+    assert.equal(L.canon({ b: 1, a: { y: 2, x: 1 } }), L.canon({ a: { x: 1, y: 2 }, b: 1 }));
+  });
+});
