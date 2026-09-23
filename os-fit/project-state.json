@@ -1,0 +1,18 @@
+{
+ "project": "retrofit-cwi-change-ledger",
+ "name": "Change Ledger",
+ "sku": "Agent Deck SKU #34",
+ "url": "https://cumulativewebinc.github.io/cwi-change-ledger/",
+ "retrofit_date": "2026-09-23",
+ "tests": "25/25 (node test runner; ledger chain + risk rules + seal verify)",
+ "invariants": [
+  "append-only hash-chained entries \u2014 never rewrite entries",
+  "Ed25519 publish seal; signing key off-repo",
+  "?change= deep links keep working"
+ ],
+ "theorem": "INCOMPLETE",
+ "missing_gates": [
+  "metrics-exist: gate not passed",
+  "monitoring-exists: gate not passed"
+ ]
+}
