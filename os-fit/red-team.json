@@ -1,0 +1,70 @@
+{
+ "id": "rt-2026-09-23",
+ "target": "Change Ledger OS retrofit (https://cumulativewebinc.github.io/cwi-change-ledger/)",
+ "attacker_urn": "urn:cwi:agent:retrofit-wave2-worker",
+ "started_at": "2026-09-23T12:00:00Z",
+ "completed_at": "2026-09-23T12:30:00Z",
+ "verdict": "cleared",
+ "checklist": [
+  {
+   "item": "failure-modes",
+   "disposition": "passed",
+   "finding": "verify.js chain+seal catches tamper; honest limits documented"
+  },
+  {
+   "item": "exploit-vectors",
+   "disposition": "passed",
+   "finding": "static page; propose tab client-side only; added links use rel=noopener"
+  },
+  {
+   "item": "weakest-assumption",
+   "disposition": "mitigated",
+   "finding": "heuristics are regex not semantic \u2014 labeled advisory; verify-it-yourself block links zero-trust checker"
+  },
+  {
+   "item": "scale-10x",
+   "disposition": "passed",
+   "finding": "chain verify O(n); 8 entries"
+  },
+  {
+   "item": "scale-100x",
+   "disposition": "passed",
+   "finding": "static; no server state"
+  },
+  {
+   "item": "api-disappearance",
+   "disposition": "mitigated",
+   "finding": "depends on GitHub Pages; repo is forkable source of truth"
+  },
+  {
+   "item": "data-corruption",
+   "disposition": "passed",
+   "finding": "hash chain + Ed25519 seal; tamper test in suite"
+  },
+  {
+   "item": "unexpected-users",
+   "disposition": "passed",
+   "finding": "i18n-ready hooks"
+  },
+  {
+   "item": "credential-leak",
+   "disposition": "passed",
+   "finding": "only ed25519.pub in repo; signing key off-repo"
+  },
+  {
+   "item": "hallucination",
+   "disposition": "passed",
+   "finding": "flags shown as advisory with evidence; no verdict claims"
+  },
+  {
+   "item": "malicious-instructions",
+   "disposition": "passed",
+   "finding": "propose tab scans pasted text for injection patterns"
+  },
+  {
+   "item": "memory-poisoning",
+   "disposition": "passed",
+   "finding": "stateless tool; nothing persisted server-side"
+  }
+ ]
+}
