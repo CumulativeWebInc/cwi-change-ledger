@@ -1,0 +1,36 @@
+{
+  "content": "cwi.content-index/1.0",
+  "name": "Change Ledger",
+  "day": "2026-09-23",
+  "id": "retrofit-cwi-change-ledger",
+  "type": "interactive_tool",
+  "url": "https://cumulativewebinc.github.io/cwi-change-ledger/",
+  "description": "Propose \u2192 risk-scan \u2192 review \u2192 decide. Every agent behavior change ships with a review trail: append-only, hash-chained entries, Ed25519 publish seal, zero-trust verifier.",
+  "tagline": "Governed pipeline for agent behavior changes",
+  "operator": "Cumulative Web Inc",
+  "sku": "Agent Deck SKU #34",
+  "media_files": [
+    "brand/cwi-logo.jpg"
+  ],
+  "caption": "Change Ledger \u2014 Governed pipeline for agent behavior changes. Paste a before/after, get heuristic risk flags, record the decision \u2014 then verify any published ledger yourself with the zero-trust checker.",
+  "hashtags": [
+    "#CumulativeWebInc",
+    "#AgentDeck",
+    "#AIAgents"
+  ],
+  "cta": "Put your next behavior change on the ledger",
+  "try_link": "https://cumulativewebinc.github.io/cwi-change-ledger/",
+  "machine_readable": {
+    "ledger": "ledger/ledger.json",
+    "ledger_index": "ledger/index.json",
+    "public_key": "keys/ed25519.pub",
+    "schema": "schema/ledger.schema.json",
+    "seal": "ledger/seal.json",
+    "verifier": "verify.js (node verify.js <ledger.json URL>)"
+  },
+  "honest_limits": "Advisory review trail, not a sandbox. Risk flags are regex heuristics \u2014 they miss novel attacks and can false-positive. Verify any published ledger with node verify.js, never on trust.",
+  "platform_targets": [
+    "github-pages"
+  ],
+  "contact": "hp@cumulativeweb.com"
+}
