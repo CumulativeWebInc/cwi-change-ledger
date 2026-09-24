@@ -1,0 +1,14 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Change Ledger (#34)",
+  "url": "https://cumulativewebinc.github.io/cwi-change-ledger/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "author": {
+    "@type": "Organization",
+    "name": "Cumulative Web Inc",
+    "url": "https://cumulativeweb.com/"
+  },
+  "description": "Governed pipeline for agent behavior changes: propose, risk-scan, review, decide — with heuristic risk rules."
+}
