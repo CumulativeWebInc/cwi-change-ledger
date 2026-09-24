@@ -10,5 +10,6 @@
     "name": "Cumulative Web Inc",
     "url": "https://cumulativeweb.com/"
   },
-  "description": "Governed pipeline for agent behavior changes: propose, risk-scan, review, decide — with heuristic risk rules."
+  "description": "Governed pipeline for agent behavior changes: propose, risk-scan, review, decide — with heuristic risk rules.",
+  "schema_version": "1.0.0"
 }
